@@ -57,6 +57,30 @@ class MainActivity : AppCompatActivity() {
     Lanzamos 5 veces los dados y lo programamos con 1sg de diferencia.
     A los 7 seguindos, sacamos la suma de la última tirada.
     Utilizamos un grupo de hilos.
+    PARA LAS TIRADAS DE LOS DADOS, UTILIZAMOS UN SÓLO HILO DE EJECUCIÓN. Ese
+    hilo lo creamos mediante un Executor. Dentro del for, lanzamos tantas tareas
+    como veces queramos. Tener en cuenta, que en este caso, sería conveniente que la
+    actualización de la UI estuviera perfectamente sincronizada. Si fueran diferentes hilos
+    de ejecución, seguramente de esta forma tendría problemas, porque Android decide que la
+    UI se lleve a cabo dentro del hilo principal. Para no ser más pesado, quiero que vosotros
+    actualicés el método shdeuleRun, utilizando un Handler de la forma:
+
+    private hander ....
+    ...
+    handler = Handler(Looper.getMAinLooper())
+    ...
+    schedulerExecutor = Executors.newSingleThereadSchedulerExecutor()
+    schedulerExector.shedule(
+        {
+            handler.post({
+                //tareas que hacer de la UI
+            })
+        },
+        Tiempo_lanzamiento, Unidad_tiempo
+    )
+
+    Otra alternativa, es crear tantos executor como hilos quieras. Podéis utilizar la
+    solución que prefiráis.
      */
     private fun sheduleRun() {
 
@@ -115,11 +139,9 @@ Método que lanza los tres dados a partir de 3 aleatorios.
 
     /*
     Muestra los resultados, que es la suma de la última tirada.
-    !!!!!No se porqué, no hace visible la vista!!!!
      */
     private fun viewResult() {
         bindingMain.txtResultado.text = sum.toString()
-       // bindingMain.txtResultado.visibility = View.VISIBLE (Esto no funciona)
         println(sum)
     }
 
